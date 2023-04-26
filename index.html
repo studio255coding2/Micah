@@ -13,13 +13,23 @@
         renderer.setSize(window.innerWidth,window.innerHeight); 
         document.body.appendChild(renderer.domElement); 
 
-        var totalCubes = 100;
+        var totalCubes = 500;
         for(var i=0; i<Math.sqrt(totalCubes); i++){
+          for(var j=0; j<Math.sqrt(totalCubes); j++){
+            var geometry = new THREE.BoxGeometry(100, 100, 100)
+            var material = new THREE.MeshLambertMaterial({color: "white"})
+            var cube1 = new THREE.Mesh(geometry, material)
+            cube1.position.x  = i;
+            cube1.position.z = j;
+            scene.add(cube1)
+          }
+      }
+      for(var i=0; i<Math.sqrt(totalCubes); i++){
           for(var j=0; j<Math.sqrt(totalCubes); j++){
             var geometry = new THREE.BoxGeometry(1, 1, 1)
             var material = new THREE.MeshLambertMaterial({color: "white"})
             var cube1 = new THREE.Mesh(geometry, material)
-            cube1.position.x  = i;
+            cube1.position.x  = i-50;
             cube1.position.z = j;
             scene.add(cube1)
           }
@@ -45,8 +55,12 @@ document.body.requestPointerLock = document.body.requestPointerLock ||
           document.body.requestPointerLock();
         };
         
-
-
+const wood = [
+  "brown"
+]
+const g = [
+"green"
+      ]
 document.body.onmousemove = function(evt) {
     camera.rotation.y-=evt.movementX/65;
     //if(Math.abs(camera.rotation.x)<1){camera.rotation.x-=evt.movementY/65;}else{camera.rotation.x-=(camera.rotation.x/Math.abs(camera.rotation.x))/100}
