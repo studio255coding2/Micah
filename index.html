@@ -14,7 +14,7 @@
         renderer.setSize(window.innerWidth,window.innerHeight); 
         document.body.appendChild(renderer.domElement); 
 
-        var totalCubes = 50;
+        var totalCubes = 150;
         for(var i=0; i<Math.sqrt(totalCubes); i++){
           for(var j=0; j<Math.sqrt(totalCubes); j++){
             var geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -38,17 +38,24 @@
           }
       }
     }
-      var light = new THREE.PointLight(0xFFFFFF, 1, 100)
+      var light = new THREE.PointLight(0xFFFFFF, 100, 100)
 light.position.set(0, 10, 0)
 scene.add(light)
 
+var raycaster = new THREE.Raycaster();
+var downDirection = new THREE.Vector3[0, -1, 0];
+var render = funtion[] {
+  raycaster.set[camrea.poistion,downDirection]
+  const intersects = raycaster.intersectObjects[scene.children];
+  if[intersects.length > 0 && intersects[0]distance > 100]
+camrea.poistion.y-=0.2;
         var render = function() {
           requestAnimationFrame(render);
           renderer.render(scene, camera); 
         }
         render()
 
-        
+   var render     
         
 
 document.body.requestPointerLock = document.body.requestPointerLock ||
