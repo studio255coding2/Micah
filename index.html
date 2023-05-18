@@ -1,18 +1,27 @@
 <html>
-  <head><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script></head>
-  <body>
-    <div id="crosshair"><div id="crosshairX"></div><div id="crosshairY"></div></div>
-    <style>
-           canvas {
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <div id="crosshair">
+    <div id="crosshairX"></div>
+    <div id="crosshairY"></div>
+  </div>
+  <style>
+    canvas {
       display: block;
       position: absolute;
       top: 0;
       left: 0;
       z-index: -1;
     }
+
     #crosshair {
       z-index: 1;
     }
+
     #crosshairX {
       width: 30px;
       height: 4px;
@@ -21,6 +30,7 @@
       top: calc(50% - 2px);
       left: calc(50% - 15px);
     }
+
     #crosshairY {
       width: 4px;
       height: 30px;
@@ -29,159 +39,174 @@
       top: calc(50% - 15px);
       left: calc(50% - 2px);
     }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.151.3/three.js" integrity="sha512-BwyZPvtawNInmLsREIDelsBWnyXzmR11MF6SG1VSkQ51YhMkdNFxL9sGKgRzTX7drQzCLVheb4sobHNGpwCn+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
-    <script>
-      function setup(){
-        var scene = new THREE.Scene(); 
-        var camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000) 
-        camera.position.z = 25;
-        camera.position.y = 5;
-        var renderer = new THREE.WebGLRenderer({antialias: true});
-        renderer.setClearColor("aqua"); 
-        renderer.setSize(window.innerWidth,window.innerHeight); 
-        document.body.appendChild(renderer.domElement); 
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.151.3/three.js"
+    integrity="sha512-BwyZPvtawNInmLsREIDelsBWnyXzmR11MF6SG1VSkQ51YhMkdNFxL9sGKgRzTX7drQzCLVheb4sobHNGpwCn+w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+  <script>
+    function setup() {
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+      camera.position.z = 25;
+      camera.position.y = 5;
+      var renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setClearColor("aqua");
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
 
-        var totalCubes = 150;
-        for(var i=0; i<Math.sqrt(totalCubes); i++){
-          for(var j=0; j<Math.sqrt(totalCubes); j++){
-            var geometry = new THREE.BoxGeometry(1, 1, 1)
-            var material = new THREE.MeshLambertMaterial({color: "white"})
-            var cube1 = new THREE.Mesh(geometry, material)
-            cube1.position.x  = i;
-            cube1.position.z = j;
-            scene.add(cube1)
-          }
+      var totalCubes = 350;
+      for (var i = 0; i < Math.sqrt(totalCubes); i++) {
+        for (var j = 0; j < Math.sqrt(totalCubes); j++) {
+          var geometry = new THREE.BoxGeometry(1, 1, 1)
+          var material = new THREE.MeshLambertMaterial({ color: "white" })
+          var cube1 = new THREE.Mesh(geometry, material)
+          cube1.position.x = i;
+          cube1.position.z = j;
+          scene.add(cube1)
+        }
       }
-      for(var i=0; i<Math.sqrt(totalCubes); i++){
-          for(var j=0; j<Math.sqrt(totalCubes); j++){
-            for(var height = 0; height <= Math.ceil((noise(i*0.05, height*0.05, j*0.05) * 75) + 2); height++){
+      for (var i = 0; i < Math.sqrt(totalCubes); i++) {
+        for (var j = 0; j < Math.sqrt(totalCubes); j++) {
+          for (var height = 0; height <= Math.ceil((noise(i * 0.05, height * 0.05, j * 0.05) * 75) + 2); height++) {
             var geometry = new THREE.BoxGeometry(1, 1, 1)
-            var material = new THREE.MeshLambertMaterial({color: "white"})
+            var material = new THREE.MeshLambertMaterial({ color: "white" })
             var cube1 = new THREE.Mesh(geometry, material)
-            cube1.position.x  = i-50;
+            cube1.position.x = i - 50;
             cube1.position.z = j;
             cube1.position.y = height;
             scene.add(cube1)
           }
+        }
       }
-    }
       var light = new THREE.PointLight(0xFFFFFF, 100, 100)
-light.position.set(0, 10, 0)
-scene.add(light)
+      light.position.set(0, 10, 0)
+      scene.add(light)
 
-var raycaster = new THREE.Raycaster();
-var downDirection = new THREE.Vector3(0, -1, 0);
-var render = function() {
-  raycaster.set(camera.position,downDirection)
-  const intersects = raycaster.intersectObjects(scene.children);
-  if(intersects.length > 0 && intersects[0].distance > 5){
-camera.position.y-=0.2;
-  }
-          requestAnimationFrame(render);
-          renderer.render(scene, camera); 
+      var raycaster = new THREE.Raycaster();
+      var downDirection = new THREE.Vector3(0, -1, 0);
+      var render = function () {
+        raycaster.set(camera.position, downDirection)
+        const intersects = raycaster.intersectObjects(scene.children);
+        if (intersects.length > 0 && intersects[0].distance > 5) {
+          camera.position.y -= 0.2;
+        }
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
       }
-        render()
+      render()
 
-        
 
-document.body.requestPointerLock = document.body.requestPointerLock ||
-                                    document.body.mozRequestPointerLock;
-        document.exitPointerLock = document.exitPointerLock ||
-                                   document.mozExitPointerLock;
-        document.body.onclick = function() {
-          document.body.requestPointerLock();
-        };
-        
-const wood = [
-  "brown"
-]
-const g = [
-"green"
+
+      document.body.requestPointerLock = document.body.requestPointerLock ||
+        document.body.mozRequestPointerLock;
+      document.exitPointerLock = document.exitPointerLock ||
+        document.mozExitPointerLock;
+      document.body.onclick = function () {
+        document.body.requestPointerLock();
+      };
+
+      const wood = [
+        "brown"
       ]
-document.body.onmousemove = function(evt) {
-    camera.rotation.y-=evt.movementX/65;
-    //if(Math.abs(camera.rotation.x)<1){camera.rotation.x-=evt.movementY/65;}else{camera.rotation.x-=(camera.rotation.x/Math.abs(camera.rotation.x))/100}
-  };
+      const g = [
+        "green"
+      ]
+      document.body.onmousemove = function (evt) {
+        camera.rotation.order = "YXZ"
+    yStore = camera.rotation.y;
+    camera.rotation.y = 0;
+    camera.rotation.x-=evt.movementY/100;
+    camera.rotation.y = yStore - evt.movementX/65;
+      };
 
-  $(document.body).keydown(function (evt) {
-          if(evt.keyCode==38) { //forwards
-            camera.rotation.x=0;
-            var direction = new THREE.Vector3();
-            camera.getWorldDirection( direction );
-            raycaster.set(camera.position, direction);
-            const intersects = raycaster.intersectObjects(scene.children);
-            if(intersects.length>0) {
-              if(intersects[0].distance>3) {
-                camera.position.add( direction );
-              }
-            } else {
-              camera.position.add( direction );
+      $(document.body).keydown(function (evt) {
+        if (evt.keyCode == 38) { //forwards
+          camera.rotation.x = 0;
+          var direction = new THREE.Vector3();
+          camera.getWorldDirection(direction);
+          raycaster.set(camera.position, direction);
+          const intersects = raycaster.intersectObjects(scene.children);
+          if (intersects.length > 0) {
+            if (intersects[0].distance > 3) {
+              camera.position.add(direction);
             }
+          } else {
+            camera.position.add(direction);
           }
-          if(evt.keyCode==40) { //backwards
-            camera.rotation.x=0;
-            var direction = new THREE.Vector3();
-            camera.getWorldDirection( direction );
-            raycaster.set(camera.position, direction.negate());
-            direction.negate()
-            const intersects = raycaster.intersectObjects(scene.children);
-            if(intersects.length>0) {
-              if(intersects[0].distance>3) {
-                camera.position.sub( direction );
-              }
-            } else {
-              camera.position.sub( direction );
+        }
+        if (evt.keyCode == 40) { //backwards
+          camera.rotation.x = 0;
+          var direction = new THREE.Vector3();
+          camera.getWorldDirection(direction);
+          raycaster.set(camera.position, direction.negate());
+          direction.negate()
+          const intersects = raycaster.intersectObjects(scene.children);
+          if (intersects.length > 0) {
+            if (intersects[0].distance > 3) {
+              camera.position.sub(direction);
             }
+          } else {
+            camera.position.sub(direction);
           }
-          if(evt.keyCode==32) { //jump
-            var downDirection = new THREE.Vector3( 0, -1, 0 )
-            raycaster.set(camera.position, downDirection);
-            const intersects = raycaster.intersectObjects(scene.children);
-            if(intersects.length>0) {
-              if(intersects[0].distance<3){
-                this.camera = camera;
-                this.camera.position.y+=1;
-              }
-            } else {
+        }
+        if (evt.keyCode == 32) { //jump
+          var downDirection = new THREE.Vector3(0, -1, 0)
+          raycaster.set(camera.position, downDirection);
+          const intersects = raycaster.intersectObjects(scene.children);
+          if (intersects.length > 0) {
+            if (intersects[0].distance < 3) {
               this.camera = camera;
-              this.camera.position.y+=1;
+              this.camera.position.y += 1;
             }
+          } else {
+            this.camera = camera;
+            this.camera.position.y += 1;
           }
-    if(evt.keyCode==17) { //go down //control key
-      this.camera = camera;
-      this.camera.position.y-=1;
-    }
-  })
+        }
+        if (evt.keyCode == 17) { //go down //control key
+          this.camera = camera;
+          this.camera.position.y -= 1;
+        }
+      })
 
 
-    document.addEventListener("click", function(evt){
-  if(evt.button == 2){
-    alert("aaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccddddddddddddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeffffffffffffffffffffffffffffffffggggggggggggggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiijjjjjjjjjjjjjjjjjjjjjjjjjjjjjjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkllllllllllllllllllllllllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooopppppppppppppppppppppppppppppppppppppppppppppppppppppppppqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrssssssssssssssssssssssssssssssssssssttttttttttttttttttttttttttttttttttttttttttttttttttttuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
-    var direction = new THREE.Vector3();
-    camera.getWorldDirection( direction );
-    raycaster.set(camera.position, direction);
-    const intersects = raycaster.intersectObjects(scene.children)
-    if(intersects.length > 0){
-      var face = intersects[0].face.normal;
-      var position = intersects[0].object.position;
-            var block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({color: "green"}));
-            block.position.x = position.x+face.x; 
-            block.position.z = position.z+face.z;
-            block.position.y = position.y+face.y;
+      document.addEventListener("click", function (evt) {
+        if (evt.button == 2) {
+          var direction = new THREE.Vector3();
+          camera.getWorldDirection(direction);
+          raycaster.set(camera.position, direction);
+          const intersects = raycaster.intersectObjects(scene.children)
+          if (intersects.length > 0) {
+            var face = intersects[0].face.normal;
+            var position = intersects[0].object.position;
+            var block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: "green" }));
+            block.position.x = position.x + face.x;
+            block.position.z = position.z + face.z;
+            block.position.y = position.y + face.y;
             scene.add(block);
+          }
+        }
+        if (evt.button == 0) {
+          var direction = new THREE.Vector3();
+          camera.getWorldDirection(direction);
+          raycaster.set(camera.position, direction);
+          const intersects = raycaster.intersectObjects(scene.children)
+          if (intersects.length > 0) {
+            var face = intersects[0].object;
+           scene.remove(face)
+          }
+        }
+      })
+
+
     }
-  }
-})
-
-
-}
 
 
 
 
-          
-   </script>
-  </body>
+
+  </script>
+</body>
+
 </html>
